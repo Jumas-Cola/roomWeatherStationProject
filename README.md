@@ -4,12 +4,12 @@
 - Web interface - **roomWeatherStation**
 
 # Parts
-Local server for running Flask app
-Arduino
-MQ-2 - Gas Sensor
-DHT11 - Temperature/Humidity Sensor
+Local server for running Flask app  
+Arduino  
+MQ-2 - Gas Sensor  
+DHT11 - Temperature/Humidity Sensor  
 
-# How to deploy on local server
+# How to deploy on Apache2 local server
 https://flask.palletsprojects.com/en/1.1.x/deploying/mod_wsgi/
 
 #P.S.
