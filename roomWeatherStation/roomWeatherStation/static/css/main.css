@@ -1,0 +1,20 @@
+body {
+  background: linear-gradient(to right, rgba(109,179,242,1) 0%, rgba(30,105,222,1) 100%);
+  font: 400 14px 'Calibri','Arial';
+}
+
+.table_fixed_head {
+    overflow-y: auto;
+    max-height: 600px;
+}
+
+@media (min-width: 1200px) {
+    .table_fixed_head {
+        max-height: 650px;
+    }
+}
+
+.table_fixed_head thead th {
+    position: sticky;
+    top: 0;
+}
