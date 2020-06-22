@@ -16,4 +16,4 @@ https://flask.palletsprojects.com/en/1.1.x/deploying/mod_wsgi/
 Use virtualenv, not venv
 
 # Screenshot
-![screenshot](127.0.0.1_5000_.png)
+![screenshot](192.168.0.108_roomweatherstation_.png)
