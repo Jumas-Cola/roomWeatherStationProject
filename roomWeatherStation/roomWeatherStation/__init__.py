@@ -1,38 +1,15 @@
-from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, jsonify, render_template, request
-from datetime import datetime as dt
-import serial
+from sqlalchemy import and_
 import atexit
 import json
 import os
-
-
-def get_serial():
-    with serial.Serial('/dev/ttyUSB0') as ser:
-        try:
-            ser.isOpen();
-        except:
-            ser.close()
-            ser.open()
-        if not os.path.exists(csv_file_path):
-            with open(csv_file_path, 'a', encoding='utf8') as csv_file:
-                csv_file.write('time,h,t,ppm,heat_index\n')
-        time = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-        h, t, ppm, heat_index = ser.readline().decode(encoding='utf8').strip().split(',')
-        with open(csv_file_path, 'a', encoding='utf8') as csv_file:
-            csv_file.write('{},{},{},{},{}\n'.format(time, h, t, ppm, heat_index))
-
-    return h, t, ppm, heat_index
-
-
-sched = BackgroundScheduler(deamon=True)
-sched.add_job(get_serial, 'interval', seconds=60)
-sched.start()
+from datetime import datetime
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.dirname(os.path.abspath(__file__)), 'h_t_ppm.db')
 
-csv_file_path='h_t_ppm.csv'
-
+from . import background_scheduler
+from .db_models import Record, db
 
 @app.route('/')
 def index():
@@ -42,26 +19,22 @@ def index():
 @app.route('/_get_sensors_values')
 def _get_sensors_values():
     lines = request.args.get('count', 60, type=int)
-    with open(csv_file_path) as csv_file:
-        values_lines = csv_file.readlines()[-lines:]
-    time_values = []
-    humidity_values = []
-    temp_values = []
-    ppm_values = []
-    heat_index_values = []
+    date_from = request.args.get('date_from', None, type=str)
+    date_to = request.args.get('date_to', None, type=str)
 
-    for line in values_lines:
-        try:
-            time, h, t, ppm, heat_index = line.strip().split(',')
-            if ppm.isdigit():
-                time_values.append(time)
-                humidity_values.append(h)
-                temp_values.append(t)
-                ppm_values.append(ppm)
-                heat_index_values.append(heat_index)
-        except:
-            pass
-        
+    if date_from and date_to:
+        date_from = datetime.strptime(date_from, '%m/%d/%Y %H:%M %p')
+        date_to = datetime.strptime(date_to, '%m/%d/%Y %H:%M %p')
+        values = Record.query.filter(and_(date_from < Record.date, Record.date < date_to)).limit(lines).all()
+    else:
+        values = list(reversed(Record.query.order_by(-Record.id).limit(lines).all()))
+
+    time_values = [val.date for val in values]
+    humidity_values = [val.humidity for val in values]
+    temp_values = [val.temperature for val in values]
+    ppm_values = [val.ppm for val in values]
+    heat_index_values = [val.heat_index for val in values]
+
     values = {
             'time_values': time_values,
             'humidity_values': humidity_values,

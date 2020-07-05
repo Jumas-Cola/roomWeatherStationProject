@@ -15,6 +15,9 @@
         <script type=text/javascript src="{{ url_for('static', filename='js/moment.js') }}"></script>
         <script type=text/javascript src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
         <script type=text/javascript src="{{ url_for('static', filename='js/palette-color-picker.min.js') }}"></script>
+        <script type=text/javascript src="{{ url_for('static', filename='js/5fbffac0df.js') }}"></script>
+        <script type=text/javascript src="{{ url_for('static', filename='js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
     </head>
     <body>
         <section class="container mt-5">
@@ -81,18 +84,48 @@
                     <img class="w-100" src="{{ url_for('static', filename='img/Apparent-temperature-heat-index-in-degrees-Celsius-according-to-air-temperature-and.png') }}">
                 </form>
 
-                <section class="table_fixed_head mt-3 mt-lg-0 col-lg-6">
-                    <table class="table bg-light">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Date</th>
-                                <th>Humidity,%</th>
-                                <th>T,°C</th>
-                                <th>CO2, PPM</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table_body" class="mt-2"></tbody>
-                    </table>
+                <section class="mt-3 mt-lg-0 col-lg-6">
+
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
+                    
+                    <div class="container bg-light">
+                        <div class="pt-3">
+                            <div class="form-group">
+                               <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
+                                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <div class="form-group">
+                               <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2"/>
+                                    <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-dark mb-2" id="clear_btn">Clear</button>
+                    </div>
+                    
+                    <section class="table_fixed_head">
+                        <table class="table bg-light">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Humidity,%</th>
+                                    <th>T,°C</th>
+                                    <th>CO2, PPM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_body" class="mt-2"></tbody>
+                        </table>
+                    </section>
+
                 </section>
 
             </section>

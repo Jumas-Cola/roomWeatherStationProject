@@ -60,7 +60,9 @@ function updateData(chart, labels, data) {
 function getData() {
     return new Promise(function(resolve, reject) {
         $.getJSON(window.location.pathname + '_get_sensors_values', { 
-            count: $('#values_count').val()
+            count: $('#values_count').val(),
+            date_from: $('#datetimepicker1 > input').val(),
+            date_to: $('#datetimepicker2 > input').val()
         }, function(data) {
             resolve(data);
         }).fail(function() {
@@ -76,7 +78,7 @@ async function update() {
 
         labels = [];
         for (let i=0; i < data.time_values.length; i++) {
-            labels.push(data.time_values[i].split(' ')[1]);
+            labels.push(data.time_values[i].split(' ')[4]);
 	}
         humidity_data = data.humidity_values;
         temp_data = data.temp_values;
@@ -134,5 +136,24 @@ $("#values_count").change(function() {
     $('#count').text($('#values_count').val());
 });
 
+$("#clear_btn").click(function() {
+    $('#datetimepicker1 > input').val('');
+    $('#datetimepicker2 > input').val('');
+});
+
+$(function () {
+    $('#datetimepicker1').datetimepicker({
+        useCurrent: false
+    });
+    $('#datetimepicker2').datetimepicker({
+        useCurrent: false
+    });
+    $("#datetimepicker1").on("change.datetimepicker", function (e) {
+        $('#datetimepicker2').datetimepicker('minDate', e.date);
+    });
+    $("#datetimepicker2").on("change.datetimepicker", function (e) {
+        $('#datetimepicker1').datetimepicker('maxDate', e.date);
+    });
+});
 
 $(update());
